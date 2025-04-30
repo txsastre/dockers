@@ -1,0 +1,14 @@
+# Checkmk Docker Compose Filed408795b9664
+services:
+  checkmk:
+    image: checkmk/check-mk-raw:latest
+    container_name: checkmk
+    ports:
+      - "8080:5000" # Map port 5000 in the container to port 8080 on the host
+    volumes:
+      - ./data:/omd/sites
+    environment:
+      - CMK_SITE_ID=mysite
+      - CMK_PASSWORD=admin
+      - CMK_LIVESTATUS_TCP=on
+    restart: unless-stopped
