@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11
+    #container_name: mariadb
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=rootpass
+      - MARIADB_DATABASE=bitnami_phpbb
+      - MARIADB_USER=bn_phpbb
+      - MARIADB_PASSWORD=phpbbpass
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+
+  phpbb:
+    image: bitnami/phpbb:3.3.10
+    #container_name: phpbb
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - PHPBB_DATABASE_HOST=mariadb
+      - PHPBB_DATABASE_PORT_NUMBER=3306
+      - PHPBB_DATABASE_USER=bn_phpbb
+      - PHPBB_DATABASE_PASSWORD=phpbbpass
+      - PHPBB_DATABASE_NAME=bitnami_phpbb
+      - PHPBB_USERNAME=admin
+      - PHPBB_PASSWORD=adminpass
+      - PHPBB_EMAIL=admin@example.com
+    depends_on:
+      - mariadb
+    volumes:
+      - phpbb_data:/bitnami/phpbb
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    #container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_USER=bn_phpbb
+      - PMA_PASSWORD=phpbbpass
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb_data:
+  phpbb_data:
