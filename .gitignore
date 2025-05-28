@@ -1,1 +1,3 @@
-data/
+**/data/
+**/db_data/
+**/phpbb_data/
