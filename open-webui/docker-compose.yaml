@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"  # Opcional (solo si necesitas acceder desde el host)
+    networks:
+      - ollama-net
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434  # ¡Cambiado! Usa el nombre del servicio
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+    networks:
+      - ollama-net
+
+volumes:
+  ollama_data:
+  open-webui:
+
+networks:
+  ollama-net:
+    driver: bridge
